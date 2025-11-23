@@ -15,6 +15,7 @@ extern int mremap_encrypted(void *, size_t, uint32_t, uint32_t, uint32_t);
 
 static int unprotect(int f, uint8_t *dupe,
                      struct encryption_info_command_64 *info) {
+  struct mach_header *header = (struct mach_header *)dupe;
   void *base = mmap(NULL, info->cryptsize, PROT_READ | PROT_EXEC, MAP_PRIVATE,
                     f, info->cryptoff);
   if (base == MAP_FAILED) {
@@ -23,7 +24,7 @@ static int unprotect(int f, uint8_t *dupe,
   }
 
   int error = mremap_encrypted(base, info->cryptsize, info->cryptid,
-                               CPU_TYPE_ARM64, CPU_SUBTYPE_ARM64_ALL);
+                               header->cputype, header->cpusubtype);
   if (error) {
     perror("mremap_encrypted");
     printf("Please wait 1 second and try it again.\n");
@@ -32,7 +33,6 @@ static int unprotect(int f, uint8_t *dupe,
   }
 
   memcpy(dupe + info->cryptoff, base, info->cryptsize);
-
   munmap(base, info->cryptsize);
   return 0;
 }
