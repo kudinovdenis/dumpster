@@ -13,6 +13,7 @@ Server
 
 * [ipatool](https://github.com/majd/ipatool)
 * [libimobiledevice](https://libimobiledevice.org/)
+* [ideviceinstaller](https://github.com/libimobiledevice/ideviceinstaller)
 * Python and [uv](https://docs.astral.sh/uv/)
 
 ## Set Up SSH
