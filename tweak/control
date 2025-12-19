@@ -1,9 +1,9 @@
-Package: me.chichou.rubberstamp
-Name: RubberStamp
+Package: com.a.uniquenamesimpletweak
+Name: UniqueNameSimpleTweak
 Version: 0.0.1
 Architecture: iphoneos-arm64
-Description: Disable device checks for install
-Maintainer: codecolorist
-Author: codecolorist
+Description: An awesome MobileSubstrate tweak!
+Maintainer: Kudinov Denis
+Author: Kudinov Denis
 Section: Tweaks
-Depends: ellekit
+Depends: mobilesubstrate (>= 0.9.5000)
