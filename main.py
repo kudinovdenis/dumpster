@@ -18,6 +18,14 @@ class Job:
         self.app, self.metadata = self.load_info_plist()
         self.bundle_id = self.metadata["CFBundleIdentifier"]
 
+    def execute(self, *args, shouldCheck=True):
+        args_str = ' '.join(map(str,args))
+        print(f"Executing {args_str}")
+        subprocess.run(
+            [*args],
+            check=shouldCheck,
+        )
+
     def load_info_plist(self) -> tuple[str, dict]:
         for zi in self.ipa.filelist:
             segments = zi.filename.split("/", 3)
@@ -62,7 +70,7 @@ class Job:
             yield zi.filename[len("Payload/") :]
 
     def run(self, host: str):
-        subprocess.run(["ideviceinstaller", "install", self.filename], check=True)
+        self.execute("ideviceinstaller", "install", self.filename)
 
         # get all app container
         xml = subprocess.check_output(["ideviceinstaller", "list", "--xml", "--user"])
@@ -77,11 +85,8 @@ class Job:
 
         bundle_path = match["Path"]
 
-        def ssh(*args):
-            subprocess.run(
-                ["ssh", host, *args],
-                check=True,
-            )
+        def ssh(*args, shouldCheck=True):
+            self.execute("ssh", host, *args, shouldCheck=shouldCheck)
 
         output = f"/tmp/unfairplay/{self.app}"
 
@@ -94,17 +99,20 @@ class Job:
             dst = f"{output}/{tail}"
             parent_dir = dst[: dst.rfind("/")]
 
-            ssh("mkdir", "-p", parent_dir)
-            ssh("rm", "-f", dst)
-            ssh("/var/jb/bin/unfair", src, dst)
+            ssh("mkdir", "-p", f"\"{parent_dir}\"")
+            ssh("rm", "-f", f"\"{dst}\"")
+            print("Don't forget to run executable before decrypt.")
+            # This is important step, but could be done with ssh.
+            #print("Run binary before decrypt")
+            #ssh(f"\'{src}\'", shouldCheck=False)
+            ssh("/var/jb/bin/unfair", f"\'{src}\'", f"\'{dst}\'")
 
         tmp = ".dump"
         shutil.rmtree(tmp, ignore_errors=True)
         os.makedirs(tmp, exist_ok=True)
-        subprocess.run(
-            ["scp", "-O", "-r", f"{host}:{output}", tmp],
-            check=True,
-        )
+
+        print("if following command fails, copy with scp manually, and continue script")
+        self.execute("scp", "-O", "-r", f"{host}:\"\'{output}\'\"", tmp, shouldCheck=False)
 
         logging.info("successfully pulled decrypted files, now creating new archive")
 
