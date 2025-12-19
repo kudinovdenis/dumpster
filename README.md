@@ -1,42 +1,36 @@
 # dumpster
 
-Glue project to build your IPA decryptor workflow. 
-Project name does not matter, there are even projects called hooker or something.
+Tool that allows you to decrypt ipa up to iOS 26 from jailbroken device with iOS 16.x by patching installd.
 
 ## Prerequisites
 
-Jailbroken iPhone
+### iPhone
+* Jailbroken iPhone logged in with your apple id account.
+* Installed [tweak for installd](tweak/README.md)
 
-Check [tweak](tweak/README.md)
-
-Server
-
-* [ipatool](https://github.com/majd/ipatool)
+### macOS device
+* installed Apple Configurator to get encrypted ipa for your apple id
 * [libimobiledevice](https://libimobiledevice.org/)
 * [ideviceinstaller](https://github.com/libimobiledevice/ideviceinstaller)
 * Python and [uv](https://docs.astral.sh/uv/)
 
 ## Set Up SSH
 
-Edit `~/.ssh/config` to add your device, for example:
+Edit `~/.ssh/config` to add your device as a host, for example:
 
 ```
 Host ios
     LogLevel ERROR
     StrictHostKeyChecking no
     UserKnownHostsFile /dev/null
-    ProxyCommand inetcat 22
+    ProxyCommand inetcat 44
     User mobile
 ```
 
-You can add `--udid` to inetcat parameters if you have multiple devices.
-
-Make sure that you can `ssh ios` without password prompt now. You need to supply this "ios" as host name param to the script.
-
 ## Workflow
 
-Download ipa with ipatool. Then
+Download ipa with Apple Configurator or ipatool. Then
 
-`uv run main.py app.ipa root@ios`
+`uv run main.py app.ipa mobile@ios`
 
 If all goes well, the result will be in app.decrypted.ipa
