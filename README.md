@@ -29,8 +29,9 @@ Host ios
 
 ## Workflow
 
-Download ipa with Apple Configurator or ipatool. Then
-
-`uv run main.py app.ipa mobile@ios`
+* install [tweak](tweak/README.md) on your jailbroken iPhone
+* Download encrypted ipa with Apple Configurator or ipatool
+* Run `uv run main.py APP_NAME.ipa mobile@ios`
+* Wait for script to finish (process could be intractive)
 
 If all goes well, the result will be in app.decrypted.ipa
