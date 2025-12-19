@@ -1,6 +1,8 @@
 .dump
+~/
+.DS_Store
 
-decrypt/unfairplay
+decrypt/unfair
 wrapper/dumpster
 
 *.ipa
