@@ -7,6 +7,7 @@ Tool that allows you to decrypt ipa up to iOS 26 from jailbroken device with iOS
 ### iPhone
 * Jailbroken iPhone logged in with your apple id account.
 * Installed [tweak for installd](tweak/README.md)
+* Installed [ElleKit](https://ellekit.space/) to inject tweaks
 
 ### macOS device
 * installed Apple Configurator to get encrypted ipa for your apple id
